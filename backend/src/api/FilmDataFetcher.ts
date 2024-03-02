@@ -12,6 +12,42 @@ export interface FilmData {
     poster: string;
 }
 
+const movieTitles = [
+    'The Shawshank Redemption',
+    'The Godfather',
+    'The Dark Knight',
+    'The Godfather: Part',
+    '12',
+    'Schindler\'s List',
+    'The Lord of the Rings: The Return of the King',
+    'Pulp Fiction',
+    'The Good, the Bad and the Ugly',
+    'Fight Club',
+    'Forrest Gump',
+    'Inception',
+    'The Lord of the Rings: The Fellowship of the Ring',
+    'The Lord of the Rings: The Two Towers',
+    'Star Wars: Episode V - The Empire Strikes Back',
+    'The Matrix',
+    'Goodfellas',
+    'One Flew Over the Cuckoo\'s Nest',
+    'Seven Samurai',
+    'Se7en',
+    'City of God',
+    'The Silence of the Lambs',
+    'It\'s a Wonderful Life',
+    'Life Is Beautiful',
+    'The Usual Suspects',
+    'Léon: The Professional',
+    'Spirited Away',
+    'Saving Private Ryan',
+    'American History X',
+    'The Green Mile',
+    'Interstellar',
+    'Psycho',
+];
+
+
 type filmId = string;
 
 export class FilmDataFetcher {
@@ -46,15 +82,8 @@ export class FilmDataFetcher {
 
     // TODO: One from each genre randomly or something. They select genres, random from those genres.
     getRandomFilmTitle(): string {
-        const titles = [
-            'The Shawshank Redemption',
-            'The Godfather',
-            'The Dark Knight',
-            'The Godfather: Part II',
-            '12'
-        ];
-        const randomIndex = Math.floor(Math.random() * titles.length);
-        return titles[randomIndex];
+        const randomIndex = Math.floor(Math.random() * movieTitles.length);
+        return movieTitles[randomIndex];
     }
 
     private parseFilmData(filmData: any): FilmData {
@@ -70,13 +99,21 @@ export class FilmDataFetcher {
         };
     }
 
-    // TODO: Duplicates
     async getXRandomFilms(x: number): Promise<FilmData[]> {
         const films: FilmData[] = [];
-        for (let i = 0; i < x; i++) {
+        const selectedTitles = new Set<string>();
+
+        while (films.length < x) {
             const randomTitle = this.getRandomFilmTitle();
-            const film = await this.fetchFilm(randomTitle);
-            if (film) films.push(film);
+    
+            if (!selectedTitles.has(randomTitle)) {
+                const film = await this.fetchFilm(randomTitle);
+                if (!film) continue;
+                films.push(film);
+                selectedTitles.add(randomTitle);
+            }
+    
+            if (selectedTitles.size >= movieTitles.length) break;
         }
         return films;
     }

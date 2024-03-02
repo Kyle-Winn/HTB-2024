@@ -26,13 +26,15 @@ router.post('/session/vote', (req, res) => {
 });
 
 // Route to get the winning film of a session
+// Called frequently after client finished matches
 router.get('/session/winning-film', (req, res) => {
     const { sessionId } = req.body;
     const winningFilmId = sessionController.getWinningFilm(sessionId);
     res.send({ winningFilmId });
 });
 
-// Route to see if voting has started
+// Route to see if matching has started
+// Called frequently after client connects to session
 router.get('/session/voting-started', (req, res) => {
     const { sessionId } = req.body;
     const votingStarted = sessionController.hasVotingStarted(sessionId);

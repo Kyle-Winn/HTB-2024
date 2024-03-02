@@ -11,9 +11,6 @@ import {
 } from '@chakra-ui/react';
 import { motion, useMotionValue, useTransform } from 'framer-motion';
 import { Card, Direction, Movie } from '../util/util';
-import { FaStar } from "react-icons/fa";
-import { IoIosHeart } from "react-icons/io";
-import { MdClose } from "react-icons/md";
 
 export const SwipeableCard: React.FC<{ movie: Movie, onSwipe: (direction: Direction) => void, style?: React.CSSProperties }> = (
   { movie, onSwipe, style }
@@ -87,13 +84,13 @@ export const SwipeableCard: React.FC<{ movie: Movie, onSwipe: (direction: Direct
         >
           <Box
             width={{ base: '85vw', md: '600px' }}
-            height={{ base: '75vh', md: '800px' }}
-            backgroundImage={`linear-gradient(to top, rgba(0, 0, 0, 0.95), transparent), url(${movie.image})`}
+            height={{ base: '70vh', md: '800px' }}
+            backgroundImage={`linear-gradient(to top, rgba(0, 0, 0, 0.95), transparent), url(${movie.poster})`}
             backgroundSize="cover"
             backgroundPosition="center"
             position='relative'
           />
-          <Box backgroundImage={`url(${movie.image})`}
+          <Box backgroundImage={`url(${movie.poster})`}
             position='absolute' top={0} left={0}
           />
           <Box position='absolute' bottom='8rem' left={0} h='6rem' w='100%' pl={6} pr={6}>
@@ -101,12 +98,13 @@ export const SwipeableCard: React.FC<{ movie: Movie, onSwipe: (direction: Direct
               {movie.title}
             </Box>
             <Box>
-              {movie.tags.map(t => (
+              {movie?.genre.map(t => (
                 <Badge key={t} colorScheme="green" mr={2}>{t}</Badge>
-              ))}              </Box>
+              ))}            
+                </Box>
             <Flex justifyContent="space-between" alignItems="center">
               <Box fontSize="sm" color="whiteAlpha.900" >
-                <Text>Rating: {movie.rating}/10</Text>
+                <Text>Rating: {movie.rated}</Text>
               </Box>
               <Box fontSize="sm" color="whiteAlpha.900">
                 <Text>Year: {movie.year}</Text>
@@ -115,11 +113,6 @@ export const SwipeableCard: React.FC<{ movie: Movie, onSwipe: (direction: Direct
           </Box>
         </Box>
       </motion.div>
-      <Flex justifyContent="space-between" mt={4} pl={8} pr={8} pt={4}>
-        <Circle size="60px" bg={'gray.100'} ><Icon as={MdClose} w={6} h={6} color="red.400" /></Circle>
-        <Circle size="60px" bg={'gray.100'} ><Icon as={FaStar} w={6} h={6} color="purple.400" /></Circle>
-        <Circle size="60px" bg={'gray.100'} ><Icon as={IoIosHeart} w={6} h={6} color="green.400" /></Circle>
-      </Flex>
     </Box>
   );
 };

@@ -15,6 +15,7 @@ export interface Movie {
     runtime: string;
     director: string;
     genre: string[];
+    poster: string,
 }
 
 export interface Genre {

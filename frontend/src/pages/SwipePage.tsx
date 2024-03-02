@@ -33,7 +33,15 @@ export const SwipePage: React.FC<{ sessionId: string, movies: Movie[], userId: s
                     votes: votes
                 }
             });
+            const results = await axios({
+                url: 'http://localhost:8081/api/session/winning-films',
+                method: 'get',
+                data: {
+                    sessionId: sessionId,
+                }
+            });
             console.log(res);
+            console.log(results);
         } catch(err){
             console.error(err);
         }

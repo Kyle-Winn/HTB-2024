@@ -11,7 +11,6 @@ export interface SessionData {
     votingStarted: boolean;
     winningFilm?: filmId;
     votes: vote[];
-    maxUsers: number;
     usersVoted: Set<userId>;
     dateStarted: Date;
 }
@@ -60,7 +59,6 @@ export class SessionController {
             films: filmsForSession,
             votingStarted: false,
             votes: [],
-            maxUsers: userSessionData.maxUsers,
             usersVoted: new Set<userId>(),
             dateStarted: new Date()
         };
@@ -74,15 +72,17 @@ export class SessionController {
         if (!sessionData) throw new Error('Session not found');
 
         const users = sessionData.userIds;
-        if (sessionData.maxUsers <= users.length) throw new Error('Session is full');
-
         const userId = this.userIdGenerator.generateUniqueUserId();
         users.push(userId);
 
-        if (users.length === sessionData.maxUsers) sessionData.votingStarted = true;
-        this.broadcastEngine.broadcastSessionStarted('Session started');
-
         return { userId: userId, films: sessionData.films }
+    }
+
+    startVoting(sessionId: sessionId) {
+        const sessionData = this.sessionsMap.get(sessionId);
+        if (!sessionData) throw new Error('Session not found');
+        sessionData.votingStarted = true;
+        this.broadcastEngine.broadcastSessionStarted('Session started');
     }
 
     private endSession(sessionId: sessionId) {
@@ -105,14 +105,14 @@ export class SessionController {
         sessionData.votes.push(...votes)
         sessionData.usersVoted.add(userId);
 
-        const allUsersVoted = sessionData.maxUsers == sessionData.usersVoted.size;
+        const allUsersVoted = sessionData.userIds.length == sessionData.usersVoted.size;
         if (allUsersVoted) this.endSession(sessionId);
     }
 
     async fetchFilmsForSession(): Promise<FilmData[]> {
         return await this.filmDataFetcher.getXRandomFilms(this.filmsPerSession);;
     }
-    
+
     getWinningFilm(sessionId: sessionId) {
         const sessionData = this.sessionsMap.get(sessionId);
         if (!sessionData) throw new Error('Session not found');

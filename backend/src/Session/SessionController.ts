@@ -112,7 +112,7 @@ export class SessionController {
     async fetchFilmsForSession(): Promise<FilmData[]> {
         return await this.filmDataFetcher.getXRandomFilms(this.filmsPerSession);;
     }
-    
+
     getWinningFilm(sessionId: sessionId) {
         const sessionData = this.sessionsMap.get(sessionId);
         if (!sessionData) throw new Error('Session not found');

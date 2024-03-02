@@ -1,13 +1,12 @@
 import axios from 'axios';
 
 export interface FilmData {
-    Title: string;
-    Year: string;
-    Rated: string;
-    Runtime: string;
-    Genre: string;
-    Director: string;
-    Response: string;
+    title: string;
+    year: string;
+    rated: string;
+    runtime: string;
+    genre: string;
+    director: string;
     filmId: filmId;
 }
 
@@ -29,11 +28,11 @@ export class FilmDataFetcher {
         if (year) url += `&y=${year}`;
       
         try {
-            const response = await axios.get<FilmData>(url)
+            const response = await axios.get<any>(url)
             if (response.status != 200) throw new Error(`HTTP error! status: ${response.status}`);
 
+            const isFilmOkay = response.data.Response === "True";
             const filmData = this.parseFilmData(response.data);
-            const isFilmOkay = filmData.Response === "True";
             if (isFilmOkay) this.cachedFilmMaps.set(title, filmData);
 
             return isFilmOkay ? filmData : undefined;
@@ -58,13 +57,12 @@ export class FilmDataFetcher {
 
     private parseFilmData(filmData: any): FilmData {
         return {
-            Title: filmData.Title,
-            Year: filmData.Year,
-            Rated: filmData.Rated,
-            Runtime: filmData.Runtime,
-            Genre: filmData.Genre,
-            Director: filmData.Director,
-            Response: filmData.Response,
+            title: filmData.Title,
+            year: filmData.Year,
+            rated: filmData.Rated,
+            runtime: filmData.Runtime,
+            genre: filmData.Genre,
+            director: filmData.Director,
             filmId: filmData.imdbID
         };
     }

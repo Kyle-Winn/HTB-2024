@@ -1,7 +1,6 @@
 import { sessionId, userId } from "../../../shared/sharedTypes";
 import { SessionData } from "./SessionController";
 
-
 export class UserIdGenerator {
     private userIds: string[] = [];
 
@@ -35,11 +34,8 @@ export class UserIdGenerator {
 
     private randomString(length: number) {
         let result = '';
-
         const charactersLength = this.characters.length;
-        for ( let i = 0; i < length; i++ ) {
-            result += this.characters.charAt(Math.floor(Math.random() * charactersLength));
-        }
+        for ( let i = 0; i < length; i++ ) result += this.characters.charAt(Math.floor(Math.random() * charactersLength));
         return result;
     }
 

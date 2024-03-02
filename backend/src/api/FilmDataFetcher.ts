@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { genre } from '../../../shared/sharedTypes';
 
 export interface FilmData {
     title: string;
@@ -62,7 +63,7 @@ export class FilmDataFetcher {
             year: filmData.Year,
             rated: filmData.Rated,
             runtime: filmData.Runtime,
-            genre: filmData.Genre,
+            genre: filmData.Genre.split(', '),
             director: filmData.Director,
             filmId: filmData.imdbID,
             poster: filmData.Poster

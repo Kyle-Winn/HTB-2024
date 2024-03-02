@@ -5,7 +5,7 @@ export interface FilmData {
     year: string;
     rated: string;
     runtime: string;
-    genre: string;
+    genre: string[];
     director: string;
     filmId: filmId;
     poster: string;

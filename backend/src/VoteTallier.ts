@@ -11,7 +11,7 @@ export class VoteTallier {
             else filmAndVotes.push({ filmId, votes: 1 });
         });
 
-        const winningFilm = filmAndVotes.reduce((acc, curr) => acc.votes > curr.votes ? acc : curr);
-        return winningFilm.filmId;
+        const sortedFilmAndVotes = filmAndVotes.sort((a, b) => b.votes - a.votes);
+        return sortedFilmAndVotes;
     }
 }

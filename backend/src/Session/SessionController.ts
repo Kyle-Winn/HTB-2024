@@ -2,14 +2,14 @@ import { BroadcastEngine } from '../BroadcastEngine';
 import { VoteTallier } from '../VoteTallier';
 import { FilmDataFetcher, FilmData } from '../api/FilmDataFetcher';
 import { UserIdGenerator } from './UserIdGenerator';
-import { filmId, sessionId, userId, vote, genre } from '../../../shared/sharedTypes';
+import { filmId, sessionId, userId, vote, genre, voteTally } from '../../../shared/sharedTypes';
 
 export interface SessionData {
     sessionId: string;
     userIds: string[];
     films: FilmData[];
     votingStarted: boolean;
-    winningFilm?: filmId;
+    winningFilms?: voteTally[];
     votes: vote[];
     usersVoted: Set<userId>;
     dateStarted: Date;
@@ -90,9 +90,9 @@ export class SessionController {
         const sessionData = this.sessionsMap.get(sessionId);
         if (!sessionData) throw new Error('Session not found');
 
-        const winningFilmId = this.voteTallier.tallyVotes(sessionData.votes);
-        this.broadcastEngine.broadcastWinningFilm(winningFilmId);
-        sessionData.winningFilm = winningFilmId;
+        const winningFilms = this.voteTallier.tallyVotes(sessionData.votes);
+        this.broadcastEngine.broadcastWinningFilm(winningFilms);
+        sessionData.winningFilms = winningFilms;
 
         this.sessionsMap.delete(sessionId);
         this.userIdGenerator.removeUsers(sessionData.userIds);
@@ -117,8 +117,8 @@ export class SessionController {
     getWinningFilm(sessionId: sessionId) {
         const sessionData = this.sessionsMap.get(sessionId);
         if (!sessionData) throw new Error('Session not found');
-        if (!sessionData.winningFilm) throw new Error('Winning film not found');
-        return sessionData.winningFilm;
+        if (!sessionData.winningFilms) throw new Error('Winning film not found');
+        return sessionData.winningFilms;
     }
 
     hasVotingStarted(sessionId: sessionId) {

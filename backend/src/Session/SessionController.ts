@@ -2,6 +2,7 @@ import { BroadcastEngine } from '../BroadcastEngine';
 import { VoteTallier } from '../VoteTallier';
 import { FilmDataFetcher, FilmData } from '../api/FilmDataFetcher';
 import { UserIdGenerator } from './UserIdGenerator';
+import { UserSessionData, filmId, sessionId, userId, vote } from '../../../shared/sharedTypes';
 
 export interface SessionData {
     sessionId: string;
@@ -13,16 +14,6 @@ export interface SessionData {
     maxUsers: number;
     usersVoted: Set<userId>;
 }
-
-export interface UserSessionData {
-    genres: string[];
-    maxUsers: number;
-}
-
-export type vote = { filmId: filmId, match: boolean}
-export type sessionId = string;
-export type userId = string;
-export type filmId = string;
 
 /*
 Flow,

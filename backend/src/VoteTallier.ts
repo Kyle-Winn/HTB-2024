@@ -1,6 +1,5 @@
-import { filmId, vote } from "./Session/SessionController";
+import { vote, voteTally } from "../../shared/sharedTypes";
 
-type voteTally = {filmId: filmId, votes: number};
 
 export class VoteTallier {
     tallyVotes(votes: vote[]) {

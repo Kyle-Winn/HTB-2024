@@ -1,4 +1,6 @@
-import { SessionData, sessionId, userId } from "./SessionController";
+import { sessionId, userId } from "../../../shared/sharedTypes";
+import { SessionData } from "./SessionController";
+
 
 export class UserIdGenerator {
     private userIds: string[] = [];

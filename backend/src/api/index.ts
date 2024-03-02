@@ -1,4 +1,3 @@
-import { userId } from '../Session/SessionController';
 import express from 'express';
 import { SessionController } from '../Session/SessionController';
 

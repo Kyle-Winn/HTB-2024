@@ -8,13 +8,13 @@ export interface Card {
 }
 
 export interface Movie {
-    id: string;
-    rating: number;
-    title: string;
-    year: number;
-    description: string;
-    image: string;
-    tags: string[];
+    filmId: string;
+    title: number;
+    year: string;
+    rated: number;
+    runtime: string;
+    director: string;
+    genre: string[];
 }
 
 export interface Genre {

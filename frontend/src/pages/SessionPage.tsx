@@ -12,43 +12,45 @@ import {
 } from '@chakra-ui/react';
 import { useState } from 'react';
 import { AddIcon, CloseIcon } from '@chakra-ui/icons';
-import { Genre } from '../util/util';
+import { Genre, Movie } from '../util/util';
+import axios from 'axios';
 
-export const SessionPage: React.FC = () => {
+export const SessionPage: React.FC<{ setMovies: (movies: Movie[]) => void, setSessionId: (id: string) => void, setUserId: (id: string) => void, movies: Movie[], sessionId: string, userId: string, start: () => void }> = (
+    { setMovies, setSessionId, setUserId, userId, sessionId, movies, start }
+) => {
 
-const genres = [
-    {
-        genre: 'Action',
-        selected: false
-    },
-    {
-        genre: 'Adventure',
-        selected: false
-    },
-];
+    const url = 'http://localhost:8081';
 
-const usersCount = 4;
-const sessionId = '1234'
+    const genres = [
+        {
+            genre: 'Action',
+            selected: false
+        },
+        {
+            genre: 'Adventure',
+            selected: false
+        },
+    ];
 
-const updateGenreSelection = (genreToUpdate: string, allGenres: Genre[]) => {
-    // Create a copy of the original state to avoid mutations
-    const updatedGenres = [...allGenres];
+    const updateGenreSelection = (genreToUpdate: string, allGenres: Genre[]) => {
+        // Create a copy of the original state to avoid mutations
+        const updatedGenres = [...allGenres];
 
-    // Find the index of the genre to update
-    const genreIndex = updatedGenres.findIndex(
-        (genre) => genre.genre === genreToUpdate
-    );
+        // Find the index of the genre to update
+        const genreIndex = updatedGenres.findIndex(
+            (genre) => genre.genre === genreToUpdate
+        );
 
-    // If the genre is found, toggle its 'selected' property
-    if (genreIndex !== -1) {
-        updatedGenres[genreIndex].selected = !updatedGenres[genreIndex].selected;
-    } else {
-        // Handle potential errors if the genre is not found (optional)
-        console.warn(`Genre "${genreToUpdate}" not found in the list.`);
-    }
+        // If the genre is found, toggle its 'selected' property
+        if (genreIndex !== -1) {
+            updatedGenres[genreIndex].selected = !updatedGenres[genreIndex].selected;
+        } else {
+            // Handle potential errors if the genre is not found (optional)
+            console.warn(`Genre "${genreToUpdate}" not found in the list.`);
+        }
 
-    return updatedGenres;
-};
+        return updatedGenres;
+    };
 
     const [selectedGenres, setSelectedGenres] = useState(genres);
 
@@ -56,32 +58,52 @@ const updateGenreSelection = (genreToUpdate: string, allGenres: Genre[]) => {
         setSelectedGenres(updateGenreSelection(genre, selectedGenres));
     };
 
+    const createSession = async () => {
+        try {
+            const res = await axios({
+                method: 'post',
+                url: `${url}/api/session/create`,
+                data: {
+                    userSessionData: { maxUsers: 2 }
+                },
+            });
+            setMovies(res.data.films);
+            setSessionId(res.data.sessionId);
+            setUserId(res.data.userId);
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
 
     return (
         <>
-            <Text></Text>
-            <Button w='100%'>Create new session</Button>
-            <Text>or</Text>
-            <Input placeholder='Enter session ID' textAlign='center' />
-            <Button w='100%'>Join session</Button>
+            {!sessionId ? (
+                <>
+                    <Button w='100%' onClick={createSession}>Create new session</Button>
+                    <Text>or</Text>
+                    <Input placeholder='Enter session ID' textAlign='center' />
+                    <Button w='100%'>Join session</Button></>)
+                : <Box>
+                    <Text>Your session ID:</Text>
+                    <Text>{sessionId}</Text>
+                </Box>}
 
             {sessionId ? (
                 <>
-            <Text>Genre:</Text>
-            <Box mb={10}>
-                {genres.map((genre) => (<Tag size='lg' key={genre.genre} variant='subtle' colorScheme='cyan'>
-                    <TagLeftIcon boxSize='12px' as={genre.selected ? AddIcon : CloseIcon} onClick={() => handleGenreClick(genre.genre)} />
-                    <TagLabel>{genre.genre}</TagLabel>
-                </Tag>))}
-            </Box>
-            <Text>Users: </Text>
-            <Text>{usersCount}</Text>
-
-            <Button w='100%'
-            >
-                Start
-            </Button>
-            </>
+                    <Text>Genre:</Text>
+                    <Box mb={10}>
+                        {genres.map((genre) => (<Tag size='lg' key={genre.genre} variant='subtle' colorScheme='cyan'>
+                            <TagLeftIcon boxSize='12px' as={genre.selected ? AddIcon : CloseIcon} onClick={() => handleGenreClick(genre.genre)} />
+                            <TagLabel>{genre.genre}</TagLabel>
+                        </Tag>))}
+                    </Box>
+                    <Button w='100%'
+                    onClick={start}
+                    >
+                        Start
+                    </Button>
+                </>
             ) : null}
         </>
     )

@@ -39,4 +39,11 @@ router.get('/session/voting-started', (req, res) => {
     res.send({ votingStarted });
 });
 
+// Route to start voting
+router.post('/session/start-voting', (req, res) => {
+    const { sessionId } = req.body;
+    sessionController.startVoting(sessionId);
+    res.send({ message: 'Voting started' });
+});
+
 export default router;

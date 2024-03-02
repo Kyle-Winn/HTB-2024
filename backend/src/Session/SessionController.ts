@@ -13,6 +13,7 @@ export interface SessionData {
     votes: vote[];
     maxUsers: number;
     usersVoted: Set<userId>;
+    dateStarted: Date;
 }
 
 /*
@@ -26,6 +27,7 @@ Flow,
 7. Server sends winning movie to users
 */
 
+// TODO: Start on seperate route, dont set max users on create
 export class SessionController {
     private sessionsMap: Map<sessionId, SessionData> = new Map<sessionId, SessionData>();
     private filmsPerSession = 10;
@@ -34,6 +36,19 @@ export class SessionController {
     private filmDataFetcher = new FilmDataFetcher();
     private broadcastEngine = new BroadcastEngine();
     private voteTallier = new VoteTallier();
+
+    constructor() {this.startGarbageCollection();}
+
+    private startGarbageCollection() {
+        const checkInterval = 30 * 1000; // 30 seconds
+        setInterval(() => {
+            this.sessionsMap.forEach((sessionData, sessionId) => {
+                const timeElapsed = new Date().getTime() - sessionData.dateStarted.getTime();
+                const oneHour = 60 * 60 * 1000;
+                if (timeElapsed > oneHour) this.sessionsMap.delete(sessionId);
+            });
+        }, checkInterval); // 30 seconds
+    }
 
     async createSession(userSessionData: UserSessionData) {
         const sessionId = this.userIdGenerator.generateUniqueSessionId(this.sessionsMap);
@@ -46,8 +61,8 @@ export class SessionController {
             votingStarted: false,
             votes: [],
             maxUsers: userSessionData.maxUsers,
-            usersVoted: new Set<userId>()
-            // TODO: Date started, so we can end session after a certain time so no memory leaks
+            usersVoted: new Set<userId>(),
+            dateStarted: new Date()
         };
 
         this.sessionsMap.set(sessionId, sessionData);

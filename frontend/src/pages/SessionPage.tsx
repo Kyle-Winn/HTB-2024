@@ -75,6 +75,21 @@ export const SessionPage: React.FC<{ setMovies: (movies: Movie[]) => void, setSe
         }
     }
 
+    const startVoting = async () => {
+        try {
+            const res = await axios({
+                method: 'post',
+                url: `${url}/api/session/start-voting`,
+                data: {
+                    sessionId: sessionId
+                }
+            });
+            console.log(res);
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
 
     return (
         <>
@@ -99,7 +114,7 @@ export const SessionPage: React.FC<{ setMovies: (movies: Movie[]) => void, setSe
                         </Tag>))}
                     </Box>
                     <Button w='100%'
-                    onClick={start}
+                    onClick={() => {start(); startVoting();}}
                     >
                         Start
                     </Button>

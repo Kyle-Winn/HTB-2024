@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { SwipeableCard } from '../components/SwipeableCard';
-import { Card, Movie } from '../util/util';
+import { Card, Direction, Movie, vote } from '../util/util';
 import axios from 'axios';
 import { FaStar } from "react-icons/fa";
 import { IoIosHeart } from "react-icons/io";
@@ -11,14 +11,34 @@ export const SwipePage: React.FC<{ sessionId: string, movies: Movie[], userId: s
     { sessionId, movies, userId }
 ) => {
 
-
     const [filtered, setFiltered] = useState(movies);
+    const [votes, setVotes] = useState([] as vote[]);
 
-    const handleSwipe = (movieId: string) => {
+    console.log(votes);
+
+    const handleSwipe = async(movieId: string, dir: Direction) => {
         setFiltered(filtered.filter(movie => 
            movie.filmId != movieId
         ))
+        setVotes([...votes, {filmId: movieId, match: dir == Direction.RIGHT}]);
+        console.log(filtered.length);
+        if(filtered.length <= 1){
+            try {
+            const res = await axios({
+                url: 'http://localhost:8081/api/session/vote',
+                method: 'post',
+                data: {
+                    sessionId: sessionId,
+                    userId: userId,
+                    votes: votes
+                }
+            });
+            console.log(res);
+        } catch(err){
+            console.error(err);
+        }
     };
+};
 
     return (
         <>
@@ -27,7 +47,7 @@ export const SwipePage: React.FC<{ sessionId: string, movies: Movie[], userId: s
             </HStack>
             <Box position='relative' h={{ base: '75vh', md: '800px' }} w={{ base: '90vw', md: '600px' }}>
                 {filtered.map((movie, index) => (
-                    <SwipeableCard key={movie.filmId} onSwipe={() => handleSwipe(movie.filmId)} movie={movie}
+                    <SwipeableCard key={movie.filmId} onSwipe={(dir: Direction) => handleSwipe(movie.filmId, dir)} movie={movie}
                         style={{
                             position: 'absolute',
                             top: `${index * 5}px`,

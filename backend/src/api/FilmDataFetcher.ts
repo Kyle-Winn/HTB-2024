@@ -8,6 +8,7 @@ export interface FilmData {
     genre: string;
     director: string;
     filmId: filmId;
+    poster: string;
 }
 
 type filmId = string;
@@ -63,7 +64,8 @@ export class FilmDataFetcher {
             runtime: filmData.Runtime,
             genre: filmData.Genre,
             director: filmData.Director,
-            filmId: filmData.imdbID
+            filmId: filmData.imdbID,
+            poster: filmData.Poster
         };
     }
 

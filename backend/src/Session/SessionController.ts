@@ -2,7 +2,7 @@ import { BroadcastEngine } from '../BroadcastEngine';
 import { VoteTallier } from '../VoteTallier';
 import { FilmDataFetcher, FilmData } from '../api/FilmDataFetcher';
 import { UserIdGenerator } from './UserIdGenerator';
-import { UserSessionData, filmId, sessionId, userId, vote } from '../../../shared/sharedTypes';
+import { filmId, sessionId, userId, vote, genre } from '../../../shared/sharedTypes';
 
 export interface SessionData {
     sessionId: string;
@@ -49,7 +49,7 @@ export class SessionController {
         }, checkInterval); // 30 seconds
     }
 
-    async createSession(userSessionData: UserSessionData) {
+    async createSession(genres: genre[]) {
         const sessionId = this.userIdGenerator.generateUniqueSessionId(this.sessionsMap);
         const userId = this.userIdGenerator.generateUniqueUserId();
         const filmsForSession = await this.fetchFilmsForSession();
@@ -64,7 +64,7 @@ export class SessionController {
         };
 
         this.sessionsMap.set(sessionId, sessionData);
-        return { userId: userId, films: sessionData.films};
+        return { userId: userId, films: sessionData.films, sessionId };
     }
 
     addUserToSession(sessionId: sessionId) {

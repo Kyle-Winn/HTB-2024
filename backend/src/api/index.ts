@@ -6,9 +6,9 @@ const sessionController = new SessionController();
 
 // Route to create a session
 router.post('/session/create', async (req, res) => {
-    const { userSessionData } = req.body;
-    const { userId, films } = await sessionController.createSession(userSessionData);
-    res.status(201).send({ userId, films, message: 'Session created' });
+    const { selectedGenres } = req.body;
+    const { userId, films, sessionId } = await sessionController.createSession(selectedGenres);
+    res.status(201).send({ userId, films, sessionId, message: 'Session created' });
 });
 
 // Route to add a user to a session

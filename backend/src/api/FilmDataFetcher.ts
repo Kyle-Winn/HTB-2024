@@ -59,9 +59,9 @@ export class FilmDataFetcher {
 
     private cachedFilmMaps: Map<string, FilmData> = new Map<filmId, FilmData>();
 
-    // constructor() {
-    //     this.chatGptSuggestor.getMovieTitles('action', 10);
-    // }
+    constructor() {
+        this.chatGptSuggestor.getMovieTitles('action', 10);
+    }
 
     async fetchFilm(title: string, year?: number): Promise<FilmData | undefined> {
         const isFilmCached = this.cachedFilmMaps.has(title);

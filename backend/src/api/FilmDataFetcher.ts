@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { genre } from '../../../shared/sharedTypes';
+import { ChatGptSuggestor } from './ChatGptSuggestor';
 
 export interface FilmData {
     title: string;
@@ -54,7 +55,13 @@ export class FilmDataFetcher {
     private readonly API_KEY: string = '27eb4530';
     private readonly BASE_URL: string = `http://www.omdbapi.com/?apikey=${this.API_KEY}&`;
 
+    private chatGptSuggestor: ChatGptSuggestor = new ChatGptSuggestor();
+
     private cachedFilmMaps: Map<string, FilmData> = new Map<filmId, FilmData>();
+
+    // constructor() {
+    //     this.chatGptSuggestor.getMovieTitles('action', 10);
+    // }
 
     async fetchFilm(title: string, year?: number): Promise<FilmData | undefined> {
         const isFilmCached = this.cachedFilmMaps.has(title);

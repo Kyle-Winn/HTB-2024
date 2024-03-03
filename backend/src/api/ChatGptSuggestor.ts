@@ -10,15 +10,15 @@ export class ChatGptSuggestor {
     }
 
     async getMovieTitles(genres: genre[], titlesAmount: number) {
-        //await this.queryOpenAI(genre, titlesAmount);
+        await this.queryOpenAI(genres, titlesAmount);
     }
 
-    private async queryOpenAI(genre: genre, titleNumber: number): Promise<void> {
+    private async queryOpenAI(genres: genre[], titleNumber: number): Promise<void> {
         try {
             const response = await axios.post(this.endpoint,
                 {
                     model: 'gpt-3.5-turbo-1106',
-                    prompt: `Can you give me ${titleNumber} movie titles under the genre ${genre}?`,
+                    prompt: `Can you give me ${titleNumber} movie titles under these genres: ${genres.join(', ')}?`,
                     temperature: 0.7,
                     max_tokens: 100,
                     top_p: 1.0,
@@ -33,9 +33,9 @@ export class ChatGptSuggestor {
                 }
             );
 
-            //console.log('Response:', response.data.choices[0].text.trim());
+            console.log('Response:', response.data.choices[0].text.trim());
         } catch (error) {
-            //console.error('Error querying OpenAI:', error);
+            console.error('Error querying OpenAI:', error);
         }
     }
 }

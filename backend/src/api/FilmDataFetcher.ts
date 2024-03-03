@@ -46,7 +46,7 @@ const movieTitles = [
     'The Green Mile',
     'Interstellar',
     'Psycho',
-    'The Shinning',
+    'The Shining',
     'The Departed',
     'The Pianist',
     'Gladiator',
@@ -58,9 +58,7 @@ const movieTitles = [
     'WALL·E',
     'The Incredibles',
     'The Iron Giant',
-    
 ];
-
 
 type filmId = string;
 

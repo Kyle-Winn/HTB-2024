@@ -11,6 +11,8 @@ export const SwipePage: React.FC<{ sessionId: string, movies: Movie[], userId: s
     { sessionId, movies, userId }
 ) => {
 
+
+    const url = 'https://cb0d-192-41-114-227.ngrok-free.app'
     const [filtered, setFiltered] = useState(movies);
     const [votes, setVotes] = useState([] as vote[]);
     const [voteList, setVoteList] = useState([] as voteResult[]);
@@ -29,7 +31,7 @@ export const SwipePage: React.FC<{ sessionId: string, movies: Movie[], userId: s
                 } else {
                     try {
                         const results = await axios({
-                            url: 'http://localhost:8081/api/session/winning-films',
+                            url: `${url}/api/session/winning-films`,
                             method: 'get',
                             params: { sessionId: sessionId },
                         });
@@ -62,7 +64,7 @@ export const SwipePage: React.FC<{ sessionId: string, movies: Movie[], userId: s
             try {
                 setDone(true);
                 const res = await axios({
-                    url: 'http://localhost:8081/api/session/vote',
+                    url: `${url}api/session/vote`,
                     method: 'post',
                     data: {
                         sessionId: sessionId,

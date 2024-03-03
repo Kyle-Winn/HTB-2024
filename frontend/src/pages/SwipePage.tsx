@@ -19,17 +19,17 @@ export const SwipePage: React.FC<{ sessionId: string, movies: Movie[], userId: s
 
 
     useEffect(() => {
-            const intervalId = setInterval(async () => {
-                // Check for your desired event here (replace with your event condition)
-                if (voteList.length > 0) {
-                    clearInterval(intervalId); // Stop the loop after the event occurs
+        const intervalId = setInterval(async () => {
+            // Check for your desired event here (replace with your event condition)
+            if (voteList.length > 0) {
+                clearInterval(intervalId); // Stop the loop after the event occurs
 
-                } else {
-                    if (filtered.length <= 1) {
+            } else {
+                if (filtered.length <= 1) {
                     const results = await axios({
                         url: 'http://localhost:8081/api/session/winning-films',
                         method: 'get',
-                        data: {
+                        params: {
                             sessionId: sessionId,
                         }
                     });
@@ -38,10 +38,10 @@ export const SwipePage: React.FC<{ sessionId: string, movies: Movie[], userId: s
                 } else {
                     console.log("No winning film yet")
                 }
-                }
-            }, 3000);
+            }
+        }, 3000);
 
-            return () => clearInterval(intervalId);
+        return () => clearInterval(intervalId);
     }, []);
 
     const handleSwipe = async (movieId: string, dir: Direction) => {

@@ -28,10 +28,9 @@ router.post('/session/vote', (req, res) => {
 
 // Route to get the winning film of a session
 // Called frequently after client finished matches
-router.get('/session/winning-films', (req: Request<{ sessionId: string}>, res) => {
-    const { sessionId } = req.params;
-    console.log(sessionId);
-    const winningFilmId = sessionController.getWinningFilm(sessionId);
+router.get('/session/winning-films', (req: Request<{ sessionId: string }>, res) => {
+    const { sessionId } = req.query;
+    const winningFilmId = sessionController.getWinningFilm(sessionId as string);
     res.send({ winningFilmId });
 });
 

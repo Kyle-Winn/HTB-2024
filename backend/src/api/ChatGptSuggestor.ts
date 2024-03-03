@@ -10,7 +10,7 @@ export class ChatGptSuggestor {
     }
 
     async getMovieTitles(genres: genre[], titlesAmount: number) {
-        await this.queryOpenAI(genres, titlesAmount);
+        //await this.queryOpenAI(genres, titlesAmount);
     }
 
     private async queryOpenAI(genres: genre[], titleNumber: number): Promise<void> {

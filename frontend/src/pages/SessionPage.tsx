@@ -156,7 +156,8 @@ export const SessionPage: React.FC<{ setMovies: (movies: Movie[]) => void, setSe
 
     return (
         <>
-            <Image src={popcorn} w='40vw' objectFit='contain' mb={16} />
+            <Image src={popcorn} w='40vw' objectFit='contain' mb={4} />
+            <Text mb={16} fontWeight='bold' fontSize='3xl'>CineSwipe</Text>
             {!sessionId ? (
                 <>
                     <Button w='100%' onClick={createSession} bg='#FF292D' color='whiteAlpha.900' borderRadius={16}>Create new session</Button>

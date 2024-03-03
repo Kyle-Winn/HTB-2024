@@ -9,8 +9,9 @@ import {
     Box,
     Text,
     Input,
+    Spinner,
 } from '@chakra-ui/react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { AddIcon, CloseIcon } from '@chakra-ui/icons';
 import { Genre, Movie } from '../util/util';
 import axios from 'axios';
@@ -58,6 +59,32 @@ export const SessionPage: React.FC<{ setMovies: (movies: Movie[]) => void, setSe
         setSelectedGenres(updateGenreSelection(genre, selectedGenres));
     };
 
+    const [isAdmin, setIsAdmin] = useState(false);
+
+    useEffect(() => {
+        if (sessionId) {
+            const intervalId = setInterval(async () => {
+                try {
+                    const res = await axios({
+                        method: 'get',
+                        url: `${url}/api/session/voting-started`,
+                        params: {
+                            sessionId: sessionId
+                        }
+                    });
+                    console.log(res);
+                    if (res.data.votingStarted) {
+                        clearInterval(intervalId);
+                        start();
+                    }
+                } catch (error) {
+                    console.log(error);
+                }
+            }, 3000);
+            return () => clearInterval(intervalId);
+        }
+    });
+
     const createSession = async () => {
         try {
             const res = await axios({
@@ -69,6 +96,7 @@ export const SessionPage: React.FC<{ setMovies: (movies: Movie[]) => void, setSe
             });
             setMovies(res.data.films);
             setSessionId(res.data.sessionId);
+            setIsAdmin(true);
             setUserId(res.data.userId);
         } catch (error) {
             console.log(error)
@@ -130,11 +158,12 @@ export const SessionPage: React.FC<{ setMovies: (movies: Movie[]) => void, setSe
                             <TagLabel>{genre.genre}</TagLabel>
                         </Tag>))}
                     </Box>
+                    {isAdmin ? (
                     <Button w='100%'
                     onClick={() => {start(); startVoting();}}
                     >
                         Start
-                    </Button>
+                    </Button>) : (<Box><Spinner/><Text>Waiting to start</Text></Box>)}
                 </>
             ) : null}
         </>

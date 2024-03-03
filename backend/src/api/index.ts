@@ -36,9 +36,9 @@ router.get('/session/winning-films', (req: Request<{ sessionId: string }>, res) 
 
 // Route to see if matching has started
 // Called frequently after client connects to session
-router.get('/session/voting-started', (req, res) => {
-    const { sessionId } = req.body;
-    const votingStarted = sessionController.hasVotingStarted(sessionId);
+router.get('/session/voting-started', (req: Request<{ sessionId: string }>, res) => {
+    const { sessionId } = req.query;
+    const votingStarted = sessionController.hasVotingStarted(sessionId as string);
     res.send({ votingStarted });
 });
 

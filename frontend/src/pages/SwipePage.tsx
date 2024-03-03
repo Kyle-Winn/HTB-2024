@@ -5,7 +5,7 @@ import axios from 'axios';
 import { FaStar } from "react-icons/fa";
 import { IoIosHeart } from "react-icons/io";
 import { MdClose } from "react-icons/md";
-import { Box, HStack, Tag, TagLabel, Circle, Icon, Flex, TagCloseButton, Text, Stack, Select, Button, filter, Image } from '@chakra-ui/react';
+import { Box, HStack, Spinner, Tag, TagLabel, Circle, Icon, Flex, TagCloseButton, Text, Stack, Select, Button, filter, Image, UnorderedList } from '@chakra-ui/react';
 
 export const SwipePage: React.FC<{ sessionId: string, movies: Movie[], userId: string }> = (
     { sessionId, movies, userId }
@@ -15,47 +15,47 @@ export const SwipePage: React.FC<{ sessionId: string, movies: Movie[], userId: s
     const [votes, setVotes] = useState([] as vote[]);
     const [voteList, setVoteList] = useState([] as vote[]);
     const [done, setDone] = useState(false);
+    console.log(voteList)
 
     useEffect(() => {
         if (done) {
-          const intervalId = setInterval(async () => {
-            // Check if the winning movie is already fetched
-            if (voteList.length > 0) {
-              // Clear the interval immediately to stop further iterations
-              clearInterval(intervalId);
-            } else {
-              try {
-                const results = await axios({
-                  url: 'http://localhost:8081/api/session/winning-films',
-                  method: 'get',
-                  params: { sessionId: sessionId },
-                });
-                setVoteList(results.data.winningFilmList);
-      
-                // If the API successfully returns a winning movie, set done to false
-                // and clear the interval
-                if (results.data.winningFilmList.length > 0) {
-                  setDone(false);
-                  clearInterval(intervalId);
+            const intervalId = setInterval(async () => {
+                // Check if the winning movie is already fetched
+                if (voteList?.length > 0) {
+                    // Clear the interval immediately to stop further iterations
+                    clearInterval(intervalId);
+                } else {
+                    try {
+                        const results = await axios({
+                            url: 'http://localhost:8081/api/session/winning-films',
+                            method: 'get',
+                            params: { sessionId: sessionId },
+                        });
+                        setVoteList(results?.data?.winningFilmList);
+
+                        // If the API successfully returns a winning movie, set done to false
+                        // and clear the interval
+                        if (results.data?.winningFilmList?.length > 0) {
+                            setDone(false);
+                            clearInterval(intervalId);
+                        }
+                    } catch (error) {
+                        console.error('Error fetching winning films:', error);
+                        // Handle errors gracefully, such as retrying or displaying an error message
+                    }
                 }
-              } catch (error) {
-                console.error('Error fetching winning films:', error);
-                // Handle errors gracefully, such as retrying or displaying an error message
-              }
-            }
-          }, 3000);
-      
-          return () => clearInterval(intervalId);
+            }, 3000);
+
+            return () => clearInterval(intervalId);
         }
-      }, [done]);
-      
+    }, [done]);
+
 
     const handleSwipe = async (movieId: string, dir: Direction) => {
         setFiltered(filtered.filter(movie =>
             movie.filmId != movieId
         ))
-        setVotes([...votes, { filmId: movieId, match: dir == Direction.RIGHT }]);
-        console.log(filtered.length);
+        setVotes([...votes, { filmId: movieId, votes: Direction.RIGHT }]);
         if (filtered.length < 2) {
             try {
                 setDone(true);
@@ -91,7 +91,23 @@ export const SwipePage: React.FC<{ sessionId: string, movies: Movie[], userId: s
                             zIndex: movies.length - index,
                         }} />
                 ))}
-                {filtered.length === 0 && <Text fontSize='2xl' fontWeight='bold' color='gray.500' position='absolute' top='50%' left='50%' transform='translate(-50%, -50%)'>No more movies to swipe!</Text>}
+                {filtered.length === 0 ? <Box>
+                    {voteList?.length > 0 ?
+                        <UnorderedList>
+                            {voteList.map((movie, index) => (
+                                <li key={index}>
+                                    <Box>
+                                        <Text>{movies.filter(m => m.filmId === movie.filmId)[0].title}</Text><Text>{movie.votes}</Text>
+                                    </Box>
+                                </li>
+                            ))}
+                        </UnorderedList>
+                        : (
+                            <Box>
+                                <Spinner />
+                            </Box>)}
+
+                </Box> : null}
             </Box>
             <Flex justifyContent="space-between" mt={4} pl={8} pr={8} pt={4} gap={6}>
                 <Circle size="60px" bg={'gray.100'} ><Icon as={MdClose} w={6} h={6} color="red.400" /></Circle>

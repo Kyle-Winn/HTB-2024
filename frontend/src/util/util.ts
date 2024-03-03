@@ -1,6 +1,7 @@
 export enum Direction {
-    LEFT = 'left',
-    RIGHT = 'right'
+    LEFT = 0,
+    RIGHT = 1,
+    UP = 2,
 }
 
 export interface Card {
@@ -23,6 +24,6 @@ export interface Genre {
     selected: boolean;
 }
 
-export type vote = { filmId: string, match: boolean}
+export type vote = { filmId: string, votes: number}
 
 export const genres = ['Action', 'Adventure', 'Comedy', 'Drama', 'Fantasy', 'Horror', 'Mystery', 'Thriller', 'Western'];

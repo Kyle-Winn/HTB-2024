@@ -17,27 +17,38 @@ export const SwipePage: React.FC<{ sessionId: string, movies: Movie[], userId: s
     const [done, setDone] = useState(false);
 
     useEffect(() => {
-        if(done) {
-        const intervalId = setInterval(async () => {
-            // Check for your desired event here (replace with your event condition)
+        if (done) {
+          const intervalId = setInterval(async () => {
+            // Check if the winning movie is already fetched
             if (voteList.length > 0) {
-                clearInterval(intervalId); // Stop the loop after the event occurs
+              // Clear the interval immediately to stop further iterations
+              clearInterval(intervalId);
             } else {
-                    const results = await axios({
-                        url: 'http://localhost:8081/api/session/winning-films',
-                        method: 'get',
-                        params: {
-                            sessionId: sessionId,
-                        }
-                    });
-                    setVoteList(results.data);
-                    console.log(results);
+              try {
+                const results = await axios({
+                  url: 'http://localhost:8081/api/session/winning-films',
+                  method: 'get',
+                  params: { sessionId: sessionId },
+                });
+                setVoteList(results.data.winningFilmList);
+      
+                // If the API successfully returns a winning movie, set done to false
+                // and clear the interval
+                if (results.data.winningFilmList.length > 0) {
+                  setDone(false);
+                  clearInterval(intervalId);
                 }
-        }, 3000);
-
-        return () => clearInterval(intervalId);
-    }
-    }, [done]);
+              } catch (error) {
+                console.error('Error fetching winning films:', error);
+                // Handle errors gracefully, such as retrying or displaying an error message
+              }
+            }
+          }, 3000);
+      
+          return () => clearInterval(intervalId);
+        }
+      }, [done]);
+      
 
     const handleSwipe = async (movieId: string, dir: Direction) => {
         setFiltered(filtered.filter(movie =>

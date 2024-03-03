@@ -14,18 +14,15 @@ export const SwipePage: React.FC<{ sessionId: string, movies: Movie[], userId: s
     const [filtered, setFiltered] = useState(movies);
     const [votes, setVotes] = useState([] as vote[]);
     const [voteList, setVoteList] = useState([] as vote[]);
-
-    console.log(votes);
-
+    const [done, setDone] = useState(false);
 
     useEffect(() => {
+        if(done) {
         const intervalId = setInterval(async () => {
             // Check for your desired event here (replace with your event condition)
             if (voteList.length > 0) {
                 clearInterval(intervalId); // Stop the loop after the event occurs
-
             } else {
-                if (filtered.length <= 1) {
                     const results = await axios({
                         url: 'http://localhost:8081/api/session/winning-films',
                         method: 'get',
@@ -35,14 +32,12 @@ export const SwipePage: React.FC<{ sessionId: string, movies: Movie[], userId: s
                     });
                     setVoteList(results.data);
                     console.log(results);
-                } else {
-                    console.log("No winning film yet")
                 }
-            }
         }, 3000);
 
         return () => clearInterval(intervalId);
-    }, []);
+    }
+    }, [done]);
 
     const handleSwipe = async (movieId: string, dir: Direction) => {
         setFiltered(filtered.filter(movie =>
@@ -50,8 +45,9 @@ export const SwipePage: React.FC<{ sessionId: string, movies: Movie[], userId: s
         ))
         setVotes([...votes, { filmId: movieId, match: dir == Direction.RIGHT }]);
         console.log(filtered.length);
-        if (filtered.length <= 1) {
+        if (filtered.length < 2) {
             try {
+                setDone(true);
                 const res = await axios({
                     url: 'http://localhost:8081/api/session/vote',
                     method: 'post',

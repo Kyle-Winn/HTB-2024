@@ -90,6 +90,23 @@ export const SessionPage: React.FC<{ setMovies: (movies: Movie[]) => void, setSe
         }
     }
 
+    const [seshInput, setSeshInput] = useState('');
+    const joinSession = async () => {
+        try {
+            const res = await axios({
+                method: 'post',
+                url: `${url}/api/session/add-user`,
+                data: {
+                    sessionId: seshInput
+                }
+            });
+            setMovies(res.data.films);
+            setSessionId(seshInput);
+            setUserId(res.data.userId);
+        } catch(err) {
+            console.error(err);
+        }
+    }
 
     return (
         <>
@@ -97,8 +114,8 @@ export const SessionPage: React.FC<{ setMovies: (movies: Movie[]) => void, setSe
                 <>
                     <Button w='100%' onClick={createSession}>Create new session</Button>
                     <Text>or</Text>
-                    <Input placeholder='Enter session ID' textAlign='center' />
-                    <Button w='100%'>Join session</Button></>)
+                    <Input placeholder='Enter session ID' textAlign='center' onChange={(e) => setSeshInput(e.target.value)} />
+                    <Button w='100%' onClick={joinSession}>Join session</Button></>)
                 : <Box>
                     <Text>Your session ID:</Text>
                     <Text>{sessionId}</Text>

@@ -114,7 +114,7 @@ export class SessionController {
         return await this.filmDataFetcher.getXRandomFilms(this.filmsPerSession);;
     }
 
-    getWinningFilm(sessionId: sessionId) {
+    getWinningFilms(sessionId: sessionId) {
         const sessionData = this.sessionsMap.get(sessionId);
         if (!sessionData) return console.log('session is ended')
         if (!sessionData.winningFilms) return console.log('requested but winning films not chosen yet');

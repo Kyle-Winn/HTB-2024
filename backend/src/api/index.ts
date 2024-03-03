@@ -30,8 +30,8 @@ router.post('/session/vote', (req, res) => {
 // Called frequently after client finished matches
 router.get('/session/winning-films', (req: Request<{ sessionId: string }>, res) => {
     const { sessionId } = req.query;
-    const winningFilmId = sessionController.getWinningFilm(sessionId as string);
-    res.send({ winningFilmId });
+    const winningFilmList = sessionController.getWinningFilms(sessionId as string);
+    res.send({ winningFilmList });
 });
 
 // Route to see if matching has started

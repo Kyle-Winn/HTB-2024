@@ -25,5 +25,6 @@ export interface Genre {
 }
 
 export type vote = { filmId: string, match: number}
+export type voteResult = { filmId: string, votes: number[]}
 
 export const genres = ['Action', 'Adventure', 'Comedy', 'Drama', 'Fantasy', 'Horror', 'Mystery', 'Thriller', 'Western'];

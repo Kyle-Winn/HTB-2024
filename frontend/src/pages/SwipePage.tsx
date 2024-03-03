@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { SwipeableCard } from '../components/SwipeableCard';
-import { Card, Direction, Movie, vote } from '../util/util';
+import { Card, Direction, Movie, vote, voteResult } from '../util/util';
 import axios from 'axios';
 import { FaStar } from "react-icons/fa";
 import { IoIosHeart } from "react-icons/io";
@@ -13,7 +13,7 @@ export const SwipePage: React.FC<{ sessionId: string, movies: Movie[], userId: s
 
     const [filtered, setFiltered] = useState(movies);
     const [votes, setVotes] = useState([] as vote[]);
-    const [voteList, setVoteList] = useState([] as vote[]);
+    const [voteList, setVoteList] = useState([] as voteResult[]);
     const [done, setDone] = useState(false);
     console.log(voteList);
     console.log(votes);
@@ -33,7 +33,7 @@ export const SwipePage: React.FC<{ sessionId: string, movies: Movie[], userId: s
                             method: 'get',
                             params: { sessionId: sessionId },
                         });
-                        setVoteList(results?.data?.winningFilmList);
+                        setVoteList(results?.data?.winningFilmList as voteResult[]);
 
                         // If the API successfully returns a winning movie, set done to false
                         // and clear the interval
@@ -98,7 +98,23 @@ export const SwipePage: React.FC<{ sessionId: string, movies: Movie[], userId: s
                     {voteList?.length > 0 ?
                         <Box pl={2}>
                             {voteList.map((movie, index) => (
-                                <Box display='column' key={index}><Text  textAlign='center'>{movies.filter(m => m.filmId === movie.filmId)[0].title}</Text><HStack></HStack></Box>
+                                <Box display='column' key={index} p={2} m={4} borderRadius={16} bg='gray.100'><Text textAlign='center'>{movies.filter(m => m.filmId === movie.filmId)[0].title}</Text>
+                                    <Center><HStack w='50%' mt={2} mb={2} justifyContent='center'>
+                                        {movie.votes.map((vote, index) => {
+                                            switch (vote) {
+                                                case 0:
+                                                    return <Icon as={MdClose} key={index} boxSize='2rem' color='red.400' />
+                                                case 1:
+                                                    return <Icon as={IoIosHeart} key={index} boxSize='2rem' color='green.400' />
+                                                case 2:
+                                                    return <Icon as={FaStar} key={index} boxSize='2rem' color='purple.400' />
+                                            }
+                                        })
+
+                                        }
+                                    </HStack>
+                                    </Center>
+                                </Box>
                             ))}
                         </Box>
                         : (
@@ -112,11 +128,11 @@ export const SwipePage: React.FC<{ sessionId: string, movies: Movie[], userId: s
                 </Box> : null}
             </Box>
             {filtered.length !== 0 ?
-            <Flex justifyContent="space-between" mt={4} pl={8} pr={8} pt={4} gap={6}>
-                <Circle size="60px" bg={'gray.100'} onClick={() => handleSwipe(filtered[0].filmId, Direction.LEFT)}><Icon as={MdClose} w={6} h={6} color="red.400" /></Circle>
-                <Circle size="60px" bg={'gray.100'} onClick={() => handleSwipe(filtered[0].filmId, Direction.UP)}><Icon as={FaStar} w={6} h={6} color="purple.400" /></Circle>
-                <Circle size="60px" bg={'gray.100'} onClick={() => handleSwipe(filtered[0].filmId, Direction.RIGHT)}><Icon as={IoIosHeart} w={6} h={6} color="green.400" /></Circle>
-            </Flex> : <Button onClick={() => window.location.reload()} ml={6} mr={6} borderRadius={16}>Back to menu</Button>}
+                <Flex justifyContent="space-between" mt={4} pl={8} pr={8} pt={4} gap={6}>
+                    <Circle size="60px" bg={'gray.100'} onClick={() => handleSwipe(filtered[0].filmId, Direction.LEFT)}><Icon as={MdClose} w={6} h={6} color="red.400" /></Circle>
+                    <Circle size="60px" bg={'gray.100'} onClick={() => handleSwipe(filtered[0].filmId, Direction.UP)}><Icon as={FaStar} w={6} h={6} color="purple.400" /></Circle>
+                    <Circle size="60px" bg={'gray.100'} onClick={() => handleSwipe(filtered[0].filmId, Direction.RIGHT)}><Icon as={IoIosHeart} w={6} h={6} color="green.400" /></Circle>
+                </Flex> : <Button onClick={() => window.location.reload()} ml={6} mr={6} borderRadius={16}>Back to menu</Button>}
         </>
     );
 };

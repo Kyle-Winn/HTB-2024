@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, forwardRef, useImperativeHandle } from 'react';
 import {
   Box,
   Badge,
@@ -12,9 +12,7 @@ import {
 import { motion, useMotionValue, useTransform } from 'framer-motion';
 import { Card, Direction, Movie } from '../util/util';
 
-export const SwipeableCard: React.FC<{ movie: Movie, onSwipe: (direction: Direction) => void, style?: React.CSSProperties }> = (
-  { movie, onSwipe, style }
-) => {
+export const SwipeableCard: React.FC<{ movie: Movie, onSwipe: (direction: Direction) => void, style?: React.CSSProperties }> = forwardRef(({ movie, onSwipe, style }, ref)  => {
   const [isRight, setIsRight] = useState(false);
   const [isLeft, setIsLeft] = useState(false);
   const [x, setX] = useState(0);
@@ -27,6 +25,11 @@ export const SwipeableCard: React.FC<{ movie: Movie, onSwipe: (direction: Direct
     v: 1000,
     d: (v: number, sv: number) => v / sv * 20,
   };
+
+  useImperativeHandle(ref, () => ({
+    swipeLeft: () => handleSwipeLeft(1000), // Example velocity
+    swipeRight: () => handleSwipeRight(1000),
+  }));
 
   const handleSwipeRight = useCallback((velocity: number) => {
     setIsRight(true);
@@ -115,4 +118,4 @@ export const SwipeableCard: React.FC<{ movie: Movie, onSwipe: (direction: Direct
       </motion.div>
     </Box>
   );
-};
+});

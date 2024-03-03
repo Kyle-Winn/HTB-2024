@@ -1,11 +1,11 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { SwipeableCard } from '../components/SwipeableCard';
 import { Card, Direction, Movie, vote } from '../util/util';
 import axios from 'axios';
 import { FaStar } from "react-icons/fa";
 import { IoIosHeart } from "react-icons/io";
 import { MdClose } from "react-icons/md";
-import { Box, HStack, Spinner, Tag, TagLabel, Circle, Icon, Flex, TagCloseButton, Text, Stack, Select, Button, filter, Image, UnorderedList } from '@chakra-ui/react';
+import { Box, HStack, Spinner, Center, Tag, TagLabel, VStack, Circle, Icon, Flex, TagCloseButton, Text, Stack, Select, Button, filter, Image, UnorderedList } from '@chakra-ui/react';
 
 export const SwipePage: React.FC<{ sessionId: string, movies: Movie[], userId: string }> = (
     { sessionId, movies, userId }
@@ -15,7 +15,8 @@ export const SwipePage: React.FC<{ sessionId: string, movies: Movie[], userId: s
     const [votes, setVotes] = useState([] as vote[]);
     const [voteList, setVoteList] = useState([] as vote[]);
     const [done, setDone] = useState(false);
-    console.log(voteList)
+    console.log(voteList);
+
 
     useEffect(() => {
         if (done) {
@@ -89,31 +90,32 @@ export const SwipePage: React.FC<{ sessionId: string, movies: Movie[], userId: s
                             left: '50%',
                             transform: 'translateX(-50%)',
                             zIndex: movies.length - index,
-                        }} />
+                        }}
+                    />
                 ))}
                 {filtered.length === 0 ? <Box>
                     {voteList?.length > 0 ?
-                        <UnorderedList>
+                        <Box pl={2}>
                             {voteList.map((movie, index) => (
-                                <li key={index}>
-                                    <Box>
-                                        <Text>{movies.filter(m => m.filmId === movie.filmId)[0].title}</Text><Text>{movie.votes}</Text>
-                                    </Box>
-                                </li>
+                                <Box display='column'><Text key={index} textAlign='center'>{movies.filter(m => m.filmId === movie.filmId)[0].title}</Text><HStack></HStack></Box>
                             ))}
-                        </UnorderedList>
+                        </Box>
                         : (
-                            <Box>
-                                <Spinner />
-                            </Box>)}
+                            <Center mt={24}>
+                                <VStack>
+                                    <Spinner />
+                                    <Text mt={6}>Waiting for others to finish..</Text>
+                                </VStack>
+                            </Center>)}
 
                 </Box> : null}
             </Box>
+            {filtered.length !== 0 ?
             <Flex justifyContent="space-between" mt={4} pl={8} pr={8} pt={4} gap={6}>
-                <Circle size="60px" bg={'gray.100'} ><Icon as={MdClose} w={6} h={6} color="red.400" /></Circle>
-                <Circle size="60px" bg={'gray.100'} ><Icon as={FaStar} w={6} h={6} color="purple.400" /></Circle>
-                <Circle size="60px" bg={'gray.100'} ><Icon as={IoIosHeart} w={6} h={6} color="green.400" /></Circle>
-            </Flex>
+                <Circle size="60px" bg={'gray.100'} onClick={() => handleSwipe(filtered[0].filmId, Direction.LEFT)}><Icon as={MdClose} w={6} h={6} color="red.400" /></Circle>
+                <Circle size="60px" bg={'gray.100'} onClick={() => handleSwipe(filtered[0].filmId, Direction.UP)}><Icon as={FaStar} w={6} h={6} color="purple.400" /></Circle>
+                <Circle size="60px" bg={'gray.100'} onClick={() => handleSwipe(filtered[0].filmId, Direction.RIGHT)}><Icon as={IoIosHeart} w={6} h={6} color="green.400" /></Circle>
+            </Flex> : <Button onClick={() => window.location.reload()} ml={6} mr={6} borderRadius={16}>Back to menu</Button>}
         </>
     );
 };

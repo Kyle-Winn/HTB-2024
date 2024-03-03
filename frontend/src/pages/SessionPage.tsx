@@ -10,11 +10,14 @@ import {
     Text,
     Input,
     Spinner,
+    Circle,
+    Image
 } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
 import { AddIcon, CloseIcon } from '@chakra-ui/icons';
 import { Genre, Movie } from '../util/util';
 import axios from 'axios';
+import popcorn from '../img/popcorn.png';
 
 export const SessionPage: React.FC<{ setMovies: (movies: Movie[]) => void, setSessionId: (id: string) => void, setUserId: (id: string) => void, movies: Movie[], sessionId: string, userId: string, start: () => void }> = (
     { setMovies, setSessionId, setUserId, userId, sessionId, movies, start }
@@ -28,7 +31,23 @@ export const SessionPage: React.FC<{ setMovies: (movies: Movie[]) => void, setSe
             selected: false
         },
         {
-            genre: 'Adventure',
+            genre: 'Comedy',
+            selected: false
+        },
+        {   
+            genre: 'Drama',
+            selected: false
+        },
+        {
+            genre: 'Horror',
+            selected: false
+        },
+        {
+            genre: 'Sci-fi',
+            selected: false
+        },
+        {
+            genre: 'Thriller',
             selected: false
         },
     ];
@@ -49,11 +68,10 @@ export const SessionPage: React.FC<{ setMovies: (movies: Movie[]) => void, setSe
             // Handle potential errors if the genre is not found (optional)
             console.warn(`Genre "${genreToUpdate}" not found in the list.`);
         }
-
         return updatedGenres;
     };
 
-    const [selectedGenres, setSelectedGenres] = useState(genres);
+    const [selectedGenres, setSelectedGenres] = useState(genres as Genre[]);
 
     const handleGenreClick = (genre: string) => {
         setSelectedGenres(updateGenreSelection(genre, selectedGenres));
@@ -90,9 +108,7 @@ export const SessionPage: React.FC<{ setMovies: (movies: Movie[]) => void, setSe
             const res = await axios({
                 method: 'post',
                 url: `${url}/api/session/create`,
-                data: {
-                    userSessionData: { maxUsers: 2 }
-                },
+
             });
             setMovies(res.data.films);
             setSessionId(res.data.sessionId);
@@ -131,39 +147,40 @@ export const SessionPage: React.FC<{ setMovies: (movies: Movie[]) => void, setSe
             setMovies(res.data.films);
             setSessionId(seshInput);
             setUserId(res.data.userId);
-        } catch(err) {
+        } catch (err) {
             console.error(err);
         }
     }
 
     return (
         <>
+            <Image src={popcorn} w='40vw' objectFit='contain' mb={16} />
             {!sessionId ? (
                 <>
-                    <Button w='100%' onClick={createSession}>Create new session</Button>
-                    <Text>or</Text>
-                    <Input placeholder='Enter session ID' textAlign='center' onChange={(e) => setSeshInput(e.target.value)} />
-                    <Button w='100%' onClick={joinSession}>Join session</Button></>)
+                    <Button w='100%' onClick={createSession} bg='#FF292D' color='whiteAlpha.900' borderRadius={16}>Create new session</Button>
+                    <Text fontSize='sm' color='gray.500'>or</Text>
+                    <Input placeholder='Enter session ID' borderRadius={16} textAlign='center' onChange={(e) => setSeshInput(e.target.value)} />
+                    <Button w='100%' onClick={joinSession} borderRadius={16}>Join session</Button></>)
                 : <Box>
-                    <Text>Your session ID:</Text>
-                    <Text>{sessionId}</Text>
+                    <Text fontSize='md' textAlign='center'>Share this code with your friends:</Text>
+                    <Text fontSize='5xl' textAlign='center'>{sessionId}</Text>
                 </Box>}
 
             {sessionId ? (
                 <>
-                    <Text>Genre:</Text>
-                    <Box mb={10}>
-                        {genres.map((genre) => (<Tag size='lg' key={genre.genre} variant='subtle' colorScheme='cyan'>
-                            <TagLeftIcon boxSize='12px' as={genre.selected ? AddIcon : CloseIcon} onClick={() => handleGenreClick(genre.genre)} />
+                    <Text mt={12}>Genre:</Text>
+                    <Box mb={10} m={6}>
+                        {selectedGenres.map((genre) => (<Tag size='lg' key={genre.genre} variant='subtle' colorScheme={genre.selected ? 'green' : 'gray'} m={1} onClick={() => handleGenreClick(genre.genre)}>
+                            <TagLeftIcon boxSize='12px' as={genre.selected ? CloseIcon : AddIcon}  />
                             <TagLabel>{genre.genre}</TagLabel>
                         </Tag>))}
                     </Box>
                     {isAdmin ? (
-                    <Button w='100%'
-                    onClick={() => {start(); startVoting();}}
-                    >
-                        Start
-                    </Button>) : (<Box><Spinner/><Text>Waiting to start</Text></Box>)}
+                        <Button w='80vw' m={6} bg='#FF292D' color='whiteAlpha.900' borderRadius={16}
+                            onClick={() => { start(); startVoting(); }}
+                        >
+                            Start
+                        </Button>) : (<Box><Spinner /><Text>Waiting to start</Text></Box>)}
                 </>
             ) : null}
         </>

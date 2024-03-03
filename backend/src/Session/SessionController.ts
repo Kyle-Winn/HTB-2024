@@ -70,8 +70,8 @@ export class SessionController {
 
     addUserToSession(sessionId: sessionId) {
         const sessionData = this.sessionsMap.get(sessionId);
-        if (!sessionData) throw new Error('Session not found');
-        if (sessionData.votingStarted) throw new Error('Voting has already started');
+        if (!sessionData) return console.log('Session not found');
+        if (sessionData.votingStarted) return console.log('Voting has already started');
 
         const users = sessionData.userIds;
         const userId = this.userIdGenerator.generateUniqueUserId();

@@ -19,6 +19,15 @@ export const SwipePage: React.FC<{ sessionId: string, movies: Movie[], userId: s
     console.log(voteList);
     console.log(votes);
 
+    const votesAdjusted = voteList.map(vote => {
+        return {
+            filmId: vote.filmId,
+            votes: vote.votes,
+            match: vote.votes.reduce((a, b) => a + b, 0)
+        }
+    }).sort((a, b) => b.match - a.match).slice(0,5);
+
+
 
     useEffect(() => {
         if (done) {
@@ -80,9 +89,7 @@ export const SwipePage: React.FC<{ sessionId: string, movies: Movie[], userId: s
 
     return (
         <>
-            <HStack spacing={4} mb={6} justifyContent='flex-start' w='100%' m={4}>
-                <Image />
-            </HStack>
+           
             <Box position='relative' h={{ base: '75vh', md: '800px' }} w={{ base: '90vw', md: '600px' }}>
                 {filtered.map((movie, index) => (
                     <SwipeableCard key={movie.filmId} onSwipe={(dir: Direction) => handleSwipe(movie.filmId, dir)} movie={movie}
@@ -98,8 +105,9 @@ export const SwipePage: React.FC<{ sessionId: string, movies: Movie[], userId: s
                 {filtered.length === 0 ? <Box>
                     {voteList?.length > 0 ?
                         <Box pl={2}>
-                            {voteList.map((movie, index) => (
-                                <Box display='column' key={index} p={2} m={4} borderRadius={16} bg='gray.100'><Text textAlign='center'>{movies.filter(m => m.filmId === movie.filmId)[0].title}</Text>
+                            <Text textAlign='center' fontWeight='bold' fontSize='xl'>TOP 5 WINNING FILMS</Text>
+                            {votesAdjusted.map((movie, index) => (
+                                <Box display='column' key={index} p={2} m={4} borderRadius={16} bg={index === 0 ? 'purple.100' : 'gray.100'}><Text textAlign='center'>{movies.filter(m => m.filmId === movie.filmId)[0].title}</Text>
                                     <Center><HStack w='50%' mt={2} mb={2} justifyContent='center'>
                                         {movie.votes.map((vote, index) => {
                                             switch (vote) {

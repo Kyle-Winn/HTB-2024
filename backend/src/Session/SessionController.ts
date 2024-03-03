@@ -116,7 +116,7 @@ export class SessionController {
 
     getWinningFilm(sessionId: sessionId) {
         const sessionData = this.sessionsMap.get(sessionId);
-        if (!sessionData) throw new Error('Session not found');
+        if (!sessionData) return console.log('session is ended')
         if (!sessionData.winningFilms) return console.log('requested but winning films not chosen yet');
         return sessionData.winningFilms;
     }

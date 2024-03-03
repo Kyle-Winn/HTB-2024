@@ -170,6 +170,7 @@ export const SessionPage: React.FC<{ setMovies: (movies: Movie[]) => void, setSe
 
             {sessionId ? (
                 <>
+                    {isAdmin ? (<>
                     <Text mt={12}>Genre:</Text>
                     <Box mb={10} m={6}>
                         {selectedGenres.map((genre) => (<Tag size='lg' key={genre.genre} variant='subtle' colorScheme={genre.selected ? 'green' : 'gray'} m={1} onClick={() => handleGenreClick(genre.genre)}>
@@ -177,12 +178,12 @@ export const SessionPage: React.FC<{ setMovies: (movies: Movie[]) => void, setSe
                             <TagLabel>{genre.genre}</TagLabel>
                         </Tag>))}
                     </Box>
-                    {isAdmin ? (
+                    
                         <Button w='80vw' m={6} bg='#FF292D' color='whiteAlpha.900' borderRadius={16}
                             onClick={() => { start(); startVoting(); }}
                         >
-                            Start
-                        </Button>) : (<Center><VStack><Spinner /><Text>Waiting for start</Text></VStack></Center>)}
+                            Start voting
+                        </Button></>) : (<Center><VStack><Spinner /><Text>Waiting for start</Text></VStack></Center>)}
                 </>
             ) : null}
         </>

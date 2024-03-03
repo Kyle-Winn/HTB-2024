@@ -98,7 +98,7 @@ export const SwipePage: React.FC<{ sessionId: string, movies: Movie[], userId: s
                     {voteList?.length > 0 ?
                         <Box pl={2}>
                             {voteList.map((movie, index) => (
-                                <Box display='column'><Text key={index} textAlign='center'>{movies.filter(m => m.filmId === movie.filmId)[0].title}</Text><HStack></HStack></Box>
+                                <Box display='column' key={index}><Text  textAlign='center'>{movies.filter(m => m.filmId === movie.filmId)[0].title}</Text><HStack></HStack></Box>
                             ))}
                         </Box>
                         : (

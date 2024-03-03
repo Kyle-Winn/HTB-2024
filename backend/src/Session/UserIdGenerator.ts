@@ -6,7 +6,7 @@ export class UserIdGenerator {
 
     private readonly sessionIdLength = 4;
     private readonly userIdLength = 8;
-    private readonly characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    private readonly characters = '0123456789';
 
     generateUniqueSessionId(sessionsMap: Map<sessionId, SessionData>) {
         let sessionId;

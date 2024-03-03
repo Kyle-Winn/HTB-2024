@@ -67,7 +67,7 @@ export const SwipePage: React.FC<{ sessionId: string, movies: Movie[], userId: s
                     data: {
                         sessionId: sessionId,
                         userId: userId,
-                        votes: [...votes, { filmId: movieId, votes: dir }]
+                        votes: [...votes, { filmId: movieId, match: dir }]
                     }
                 });
                 console.log(res);

@@ -10,6 +10,8 @@ import {
     Text,
     Input,
     Spinner,
+    Center,
+    VStack,
     Circle,
     Image
 } from '@chakra-ui/react';
@@ -180,7 +182,7 @@ export const SessionPage: React.FC<{ setMovies: (movies: Movie[]) => void, setSe
                             onClick={() => { start(); startVoting(); }}
                         >
                             Start
-                        </Button>) : (<Box><Spinner /><Text>Waiting to start</Text></Box>)}
+                        </Button>) : (<Center><VStack><Spinner /><Text>Waiting for start</Text></VStack></Center>)}
                 </>
             ) : null}
         </>

@@ -16,6 +16,7 @@ export const SwipePage: React.FC<{ sessionId: string, movies: Movie[], userId: s
     const [voteList, setVoteList] = useState([] as vote[]);
     const [done, setDone] = useState(false);
     console.log(voteList);
+    console.log(votes);
 
 
     useEffect(() => {
@@ -56,7 +57,7 @@ export const SwipePage: React.FC<{ sessionId: string, movies: Movie[], userId: s
         setFiltered(filtered.filter(movie =>
             movie.filmId != movieId
         ))
-        setVotes([...votes, { filmId: movieId, votes: Direction.RIGHT }]);
+        setVotes([...votes, { filmId: movieId, votes: dir }]);
         if (filtered.length < 2) {
             try {
                 setDone(true);

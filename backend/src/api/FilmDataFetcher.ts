@@ -46,6 +46,19 @@ const movieTitles = [
     'The Green Mile',
     'Interstellar',
     'Psycho',
+    'The Shinning',
+    'The Departed',
+    'The Pianist',
+    'Gladiator',
+    'The Prestige',
+    'The Lion King',
+    'The Lives of Others',
+    'The Dictator',
+    'Ratatouille',
+    'WALL·E',
+    'The Incredibles',
+    'The Iron Giant',
+    
 ];
 
 

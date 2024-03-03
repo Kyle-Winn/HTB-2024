@@ -1,6 +1,6 @@
 export type voteTally = {filmId: filmId, votes: likeRating[]};
 export type vote = { filmId: filmId, match: likeRating}
-export type likeRating = 0 | 1 | 2
+export type likeRating = 0 | 1 | 1.8
 
 export type filmId = string;
 export type sessionId = string;

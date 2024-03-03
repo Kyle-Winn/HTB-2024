@@ -19,7 +19,7 @@ export const SwipePage: React.FC<{ sessionId: string, movies: Movie[], userId: s
     console.log(voteList);
     console.log(votes);
 
-    const votesAdjusted = voteList.map(vote => {
+    const votesAdjusted = voteList?.map(vote => {
         return {
             filmId: vote.filmId,
             votes: vote.votes,
@@ -115,7 +115,7 @@ export const SwipePage: React.FC<{ sessionId: string, movies: Movie[], userId: s
                                                     return <Icon as={MdClose} key={index} boxSize='2rem' color='red.400' />
                                                 case 1:
                                                     return <Icon as={IoIosHeart} key={index} boxSize='2rem' color='green.400' />
-                                                case 2:
+                                                case 1.8:
                                                     return <Icon as={FaStar} key={index} boxSize='2rem' color='purple.400' />
                                             }
                                         })

@@ -1,7 +1,7 @@
 export enum Direction {
     LEFT = 0,
     RIGHT = 1,
-    UP = 2,
+    UP = 1.8,
 }
 
 export interface Card {

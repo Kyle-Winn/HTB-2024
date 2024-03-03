@@ -124,7 +124,7 @@ export class SessionController {
 
     hasVotingStarted(sessionId: sessionId) {
         const sessionData = this.sessionsMap.get(sessionId);
-        if (!sessionData) throw new Error('Session not found');
+        if (!sessionData) return console.log('Session not found');
         return sessionData.votingStarted;
     }
 }

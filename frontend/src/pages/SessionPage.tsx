@@ -25,7 +25,7 @@ export const SessionPage: React.FC<{ setMovies: (movies: Movie[]) => void, setSe
     { setMovies, setSessionId, setUserId, userId, sessionId, movies, start }
 ) => {
 
-    const url = 'http://localhost:8081';
+    const url = 'https://4446-192-41-114-227.ngrok-free.app';
 
     const genres = [
         {

@@ -7,11 +7,11 @@ export class VoteTallier {
         votes.forEach((vote) => {
             const filmId = vote.filmId;
             const filmVote = filmAndVotes.find((filmVote) => filmVote.filmId === filmId);
-            if (filmVote) filmVote.votes++;
-            else filmAndVotes.push({ filmId, votes: 1 });
+
+            if (filmVote) filmVote.votes.push(vote.match);
+            else filmAndVotes.push({ filmId, votes: [vote.match] });
         });
 
-        const sortedFilmAndVotes = filmAndVotes.sort((a, b) => b.votes - a.votes);
-        return sortedFilmAndVotes;
+        return filmAndVotes;
     }
 }

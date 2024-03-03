@@ -1,5 +1,6 @@
-export type voteTally = {filmId: filmId, votes: number};
-export type vote = { filmId: filmId, match: boolean}
+export type voteTally = {filmId: filmId, votes: likeRating[]};
+export type vote = { filmId: filmId, match: likeRating}
+export type likeRating = 0 | 1 | 2
 
 export type filmId = string;
 export type sessionId = string;

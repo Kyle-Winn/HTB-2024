@@ -29,7 +29,7 @@ Flow,
 // TODO: Start on seperate route, dont set max users on create
 export class SessionController {
     private sessionsMap: Map<sessionId, SessionData> = new Map<sessionId, SessionData>();
-    private filmsPerSession = 10;
+    private filmsPerSession = 2;
 
     private userIdGenerator = new UserIdGenerator();
     private filmDataFetcher = new FilmDataFetcher();
@@ -94,8 +94,8 @@ export class SessionController {
         this.broadcastEngine.broadcastWinningFilm(winningFilms);
         sessionData.winningFilms = winningFilms;
 
-        this.sessionsMap.delete(sessionId);
         this.userIdGenerator.removeUsers(sessionData.userIds);
+        setTimeout(() => this.sessionsMap.delete(sessionId), 1000 * 60 * 1); // 1 minute
     }
 
     addVotesToSession(sessionId: sessionId, userId: userId, votes: vote[]) {

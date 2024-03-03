@@ -24,6 +24,6 @@ export interface Genre {
     selected: boolean;
 }
 
-export type vote = { filmId: string, votes: number}
+export type vote = { filmId: string, match: number}
 
 export const genres = ['Action', 'Adventure', 'Comedy', 'Drama', 'Fantasy', 'Horror', 'Mystery', 'Thriller', 'Western'];

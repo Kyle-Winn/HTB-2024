@@ -57,7 +57,7 @@ export const SwipePage: React.FC<{ sessionId: string, movies: Movie[], userId: s
         setFiltered(filtered.filter(movie =>
             movie.filmId != movieId
         ))
-        setVotes([...votes, { filmId: movieId, votes: dir }]);
+        setVotes([...votes, { filmId: movieId, match: dir }]);
         if (filtered.length < 2) {
             try {
                 setDone(true);

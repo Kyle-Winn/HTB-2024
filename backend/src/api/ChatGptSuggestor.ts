@@ -2,11 +2,15 @@ import { genre } from './../../../shared/sharedTypes';
 import axios from 'axios';
 
 export class ChatGptSuggestor {
-    private readonly apiKey: string | undefined = process.env.OPENAI_API_KEY;
+    private readonly apiKey: string | undefined;
     private readonly endpoint: string = 'https://api.openai.com/v1/completions';
 
-    async getMovieTitles(genre: genre, titlesAmount: number) {
-        await this.queryOpenAI(genre, titlesAmount);
+    constructor() {
+        this.apiKey = process.env.OPENAI_API_KEY || undefined;
+    }
+
+    async getMovieTitles(genres: genre[], titlesAmount: number) {
+        //await this.queryOpenAI(genre, titlesAmount);
     }
 
     private async queryOpenAI(genre: genre, titleNumber: number): Promise<void> {
@@ -29,9 +33,9 @@ export class ChatGptSuggestor {
                 }
             );
 
-            console.log('Response:', response.data.choices[0].text.trim());
+            //console.log('Response:', response.data.choices[0].text.trim());
         } catch (error) {
-            console.error('Error querying OpenAI:', error);
+            //console.error('Error querying OpenAI:', error);
         }
     }
 }

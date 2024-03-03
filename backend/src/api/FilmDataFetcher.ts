@@ -59,10 +59,6 @@ export class FilmDataFetcher {
 
     private cachedFilmMaps: Map<string, FilmData> = new Map<filmId, FilmData>();
 
-    constructor() {
-        this.chatGptSuggestor.getMovieTitles('action', 10);
-    }
-
     async fetchFilm(title: string, year?: number): Promise<FilmData | undefined> {
         const isFilmCached = this.cachedFilmMaps.has(title);
         if (isFilmCached) return Promise.resolve(this.cachedFilmMaps.get(title) || undefined);
@@ -87,7 +83,6 @@ export class FilmDataFetcher {
         }
     }
 
-    // TODO: One from each genre randomly or something. They select genres, random from those genres.
     getRandomFilmTitle(): string {
         const randomIndex = Math.floor(Math.random() * movieTitles.length);
         return movieTitles[randomIndex];
@@ -106,10 +101,11 @@ export class FilmDataFetcher {
         };
     }
 
-    async getXRandomFilms(x: number): Promise<FilmData[]> {
+    async getXRandomFilms(x: number, genres: genre[]): Promise<FilmData[]> {
         const films: FilmData[] = [];
         const selectedTitles = new Set<string>();
 
+        this.chatGptSuggestor.getMovieTitles(genres, x);  // then loop through titles and fetch them
         while (films.length < x) {
             const randomTitle = this.getRandomFilmTitle();
     

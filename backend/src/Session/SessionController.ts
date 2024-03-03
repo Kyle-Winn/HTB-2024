@@ -1,8 +1,9 @@
+import { genre } from './../../../shared/sharedTypes';
 import { BroadcastEngine } from '../BroadcastEngine';
 import { VoteTallier } from '../VoteTallier';
 import { FilmDataFetcher, FilmData } from '../api/FilmDataFetcher';
 import { UserIdGenerator } from './UserIdGenerator';
-import { filmId, sessionId, userId, vote, genre, voteTally } from '../../../shared/sharedTypes';
+import { filmId, sessionId, userId, vote, voteTally } from '../../../shared/sharedTypes';
 
 export interface SessionData {
     sessionId: string;
@@ -52,7 +53,7 @@ export class SessionController {
     async createSession(genres: genre[]) {
         const sessionId = this.userIdGenerator.generateUniqueSessionId(this.sessionsMap);
         const userId = this.userIdGenerator.generateUniqueUserId();
-        const filmsForSession = await this.fetchFilmsForSession();
+        const filmsForSession = await this.fetchFilmsForSession(genres);
         const sessionData: SessionData = {
             sessionId,
             userIds: [userId],
@@ -110,8 +111,8 @@ export class SessionController {
         if (allUsersVoted) this.endSession(sessionId);
     }
 
-    async fetchFilmsForSession(): Promise<FilmData[]> {
-        return await this.filmDataFetcher.getXRandomFilms(this.filmsPerSession);;
+    async fetchFilmsForSession(genres: genre[]): Promise<FilmData[]> {
+        return await this.filmDataFetcher.getXRandomFilms(this.filmsPerSession, genres);
     }
 
     getWinningFilms(sessionId: sessionId) {

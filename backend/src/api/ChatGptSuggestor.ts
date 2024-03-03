@@ -10,7 +10,7 @@ export class ChatGptSuggestor {
     }
 
     async getMovieTitles(genres: genre[], titlesAmount: number) {
-        //await this.queryOpenAI(genres, titlesAmount);
+        await this.queryOpenAI(genres, titlesAmount);
     }
 
     private async queryOpenAI(genres: genre[], titleNumber: number): Promise<void> {
@@ -36,7 +36,8 @@ export class ChatGptSuggestor {
 
             console.log('Response:', response.data.choices[0].text.trim());
         } catch (error) {
-            console.error('Error querying OpenAI:', error);
+            console.error('Error querying OpenAI');
+            console.log(error);
         }
     }
 }

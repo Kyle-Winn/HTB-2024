@@ -105,7 +105,7 @@ export class FilmDataFetcher {
         const films: FilmData[] = [];
         const selectedTitles = new Set<string>();
 
-        this.chatGptSuggestor.getMovieTitles(genres, x);  //TODO: then loop through titles and fetch them
+        //this.chatGptSuggestor.getMovieTitles(genres, x);  //TODO: then loop through titles and fetch them
         while (films.length < x) {
             const randomTitle = this.getRandomFilmTitle();
     

@@ -1,5 +1,6 @@
 import express from 'express';
 import { SessionController } from '../Session/SessionController';
+import { Request } from 'express';
 
 const router = express.Router();
 const sessionController = new SessionController();
@@ -27,8 +28,9 @@ router.post('/session/vote', (req, res) => {
 
 // Route to get the winning film of a session
 // Called frequently after client finished matches
-router.get('/session/winning-films', (req, res) => {
-    const { sessionId } = req.body;
+router.get('/session/winning-films', (req: Request<{ sessionId: string}>, res) => {
+    const { sessionId } = req.params;
+    console.log(sessionId);
     const winningFilmId = sessionController.getWinningFilm(sessionId);
     res.send({ winningFilmId });
 });

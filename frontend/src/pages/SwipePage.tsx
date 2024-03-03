@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { SwipeableCard } from '../components/SwipeableCard';
 import { Card, Direction, Movie, vote } from '../util/util';
 import axios from 'axios';
@@ -13,40 +13,60 @@ export const SwipePage: React.FC<{ sessionId: string, movies: Movie[], userId: s
 
     const [filtered, setFiltered] = useState(movies);
     const [votes, setVotes] = useState([] as vote[]);
+    const [voteList, setVoteList] = useState([] as vote[]);
 
     console.log(votes);
 
-    const handleSwipe = async(movieId: string, dir: Direction) => {
-        setFiltered(filtered.filter(movie => 
-           movie.filmId != movieId
+
+    useEffect(() => {
+            const intervalId = setInterval(async () => {
+                // Check for your desired event here (replace with your event condition)
+                if (voteList.length > 0) {
+                    clearInterval(intervalId); // Stop the loop after the event occurs
+
+                } else {
+                    if (filtered.length <= 1) {
+                    const results = await axios({
+                        url: 'http://localhost:8081/api/session/winning-films',
+                        method: 'get',
+                        data: {
+                            sessionId: sessionId,
+                        }
+                    });
+                    setVoteList(results.data);
+                    console.log(results);
+                } else {
+                    console.log("No winning film yet")
+                }
+                }
+            }, 3000);
+
+            return () => clearInterval(intervalId);
+    }, []);
+
+    const handleSwipe = async (movieId: string, dir: Direction) => {
+        setFiltered(filtered.filter(movie =>
+            movie.filmId != movieId
         ))
-        setVotes([...votes, {filmId: movieId, match: dir == Direction.RIGHT}]);
+        setVotes([...votes, { filmId: movieId, match: dir == Direction.RIGHT }]);
         console.log(filtered.length);
-        if(filtered.length <= 1){
+        if (filtered.length <= 1) {
             try {
-            const res = await axios({
-                url: 'http://localhost:8081/api/session/vote',
-                method: 'post',
-                data: {
-                    sessionId: sessionId,
-                    userId: userId,
-                    votes: votes
-                }
-            });
-            const results = await axios({
-                url: 'http://localhost:8081/api/session/winning-films',
-                method: 'get',
-                data: {
-                    sessionId: sessionId,
-                }
-            });
-            console.log(res);
-            console.log(results);
-        } catch(err){
-            console.error(err);
-        }
+                const res = await axios({
+                    url: 'http://localhost:8081/api/session/vote',
+                    method: 'post',
+                    data: {
+                        sessionId: sessionId,
+                        userId: userId,
+                        votes: votes
+                    }
+                });
+                console.log(res);
+            } catch (err) {
+                console.error(err);
+            }
+        };
     };
-};
 
     return (
         <>

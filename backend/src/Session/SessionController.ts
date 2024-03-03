@@ -37,7 +37,7 @@ export class SessionController {
     private broadcastEngine = new BroadcastEngine();
     private voteTallier = new VoteTallier();
 
-    constructor() {this.startGarbageCollection();}
+    constructor() { this.startGarbageCollection(); }
 
     private startGarbageCollection() {
         const checkInterval = 30 * 1000; // 30 seconds
@@ -69,15 +69,20 @@ export class SessionController {
     }
 
     addUserToSession(sessionId: sessionId) {
-        const sessionData = this.sessionsMap.get(sessionId);
-        if (!sessionData) return console.log('Session not found');
-        if (sessionData.votingStarted) return console.log('Voting has already started');
+        try {
+            const sessionData = this.sessionsMap.get(sessionId);
+            if (!sessionData) throw new Error('Session not found');
+            if (sessionData.votingStarted) throw new Error('Voting has already started');
 
-        const users = sessionData.userIds;
-        const userId = this.userIdGenerator.generateUniqueUserId();
-        users.push(userId);
+            const users = sessionData.userIds;
+            const userId = this.userIdGenerator.generateUniqueUserId();
+            users.push(userId);
 
-        return { userId: userId, films: sessionData.films }
+            return { userId: userId, films: sessionData.films }
+        } catch (error) {
+            console.log(error);
+            return { userId: null, films: [] }
+        }
     }
 
     startVoting(sessionId: sessionId) {

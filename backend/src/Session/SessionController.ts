@@ -30,7 +30,7 @@ Flow,
 // TODO: Start on seperate route, dont set max users on create
 export class SessionController {
     private sessionsMap: Map<sessionId, SessionData> = new Map<sessionId, SessionData>();
-    private filmsPerSession = 2;
+    private filmsPerSession = 10;
 
     private userIdGenerator = new UserIdGenerator();
     private filmDataFetcher = new FilmDataFetcher();

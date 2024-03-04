@@ -11,7 +11,9 @@ export const SwipePage: React.FC<{ sessionId: string, movies: Movie[], userId: s
     { sessionId, movies, userId }
 ) => {
 
-    const url = 'https://4446-192-41-114-227.ngrok-free.app';
+    const isBrowserHttps = window.location.protocol === 'https:'
+    const protocol = isBrowserHttps ? 'https://' : 'http://'
+    const url = `${protocol}${window.location.hostname}:8081`;
     const [filtered, setFiltered] = useState(movies);
     const [votes, setVotes] = useState([] as vote[]);
     const [voteList, setVoteList] = useState([] as voteResult[]);
